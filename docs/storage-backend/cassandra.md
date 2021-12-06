@@ -16,19 +16,19 @@ be used in concert with Apache Cassandra.
 
 ## Cassandra Storage Backend
 
-Cassandra has two protocols for clients to use: CQL and Thrift. 
+Cassandra has two protocols for clients to use: CQL and Thrift.
 With Cassandra 4.0, Thrift support will be removed in Cassandra.
 JanusGraph just supports the CQL storage backend.
 
 !!! note
-    If security is enabled on Cassandra, the user must have
-    `CREATE permission on <all keyspaces>`, otherwise the keyspace must be
-    created ahead of time by an administrator including the required
-    tables or the user must have
-    `CREATE permission on <the configured keyspace>`. The create table
-    file containing the required tables is located in
-    `conf/cassandra/cassandraTables.cql`. Please define your keyspace
-    before executing it.
+If security is enabled on Cassandra, the user must have
+`CREATE permission on <all keyspaces>`, otherwise the keyspace must be
+created ahead of time by an administrator including the required
+tables or the user must have
+`CREATE permission on <the configured keyspace>`. The create table
+file containing the required tables is located in
+`conf/cassandra/cassandraTables.cql`. Please define your keyspace
+before executing it.
 
 ## Local Server Mode
 
@@ -48,7 +48,7 @@ JanusGraph over Cassandra requires the following setup steps:
     in the directory where Cassandra was unpacked. Read output to check
     that Cassandra started successfully.
 
-    Now, you can create a Cassandra JanusGraph as follows  
+    Now, you can create a Cassandra JanusGraph as follows
 ```java
 JanusGraph g = JanusGraphFactory.build().
 set("storage.backend", "cql").
@@ -136,15 +136,15 @@ example and more information on how to configure the server.
 ```yaml
 ...
 graphs: {
-  g: conf/janusgraph-cql.properties
+    g: conf/janusgraph-cql.properties
 }
 scriptEngines: {
-  gremlin-groovy: {
-    plugins: { org.janusgraph.graphdb.tinkerpop.plugin.JanusGraphGremlinPlugin: {},
-               org.apache.tinkerpop.gremlin.server.jsr223.GremlinServerGremlinPlugin: {},
-               org.apache.tinkerpop.gremlin.tinkergraph.jsr223.TinkerGraphGremlinPlugin: {},
-               org.apache.tinkerpop.gremlin.jsr223.ImportGremlinPlugin: {classImports: [java.lang.Math], methodImports: [java.lang.Math#*]},
-               org.apache.tinkerpop.gremlin.jsr223.ScriptFileGremlinPlugin: {files: [scripts/empty-sample.groovy]}}}}
+    gremlin-groovy: {
+        plugins: { org.janusgraph.graphdb.tinkerpop.plugin.JanusGraphGremlinPlugin: {},
+                   org.apache.tinkerpop.gremlin.server.jsr223.GremlinServerGremlinPlugin: {},
+                   org.apache.tinkerpop.gremlin.tinkergraph.jsr223.TinkerGraphGremlinPlugin: {},
+                   org.apache.tinkerpop.gremlin.jsr223.ImportGremlinPlugin: {classImports: [java.lang.Math], methodImports: [java.lang.Math#*]},
+                   org.apache.tinkerpop.gremlin.jsr223.ScriptFileGremlinPlugin: {files: [scripts/empty-sample.groovy]}}}}
 ...
 ```
 
@@ -186,6 +186,52 @@ However, note that all these vertices and/or edges will be loaded into
 memory which can cause `OutOfMemoryException`. Use [JanusGraph with TinkerPop’s Hadoop-Gremlin](../advanced-topics/hadoop.md) to
 iterate over all vertices or edges in large graphs effectively.
 
+## Deploying on DataStax Astra
+
+> Astra DB simplifies cloud-native Cassandra application development. It reduces deployment time from weeks to minutes,
+> and delivers an unprecedented combination of serverless, pay-as-you-go pricing with the freedom and agility of
+> multi-cloud and open source.
+>
+> —  [DataStax Astra](https://www.datastax.com/products/datastax-astra)
+
+[Download](https://docs.datastax.com/en/astra/aws/doc/dscloud/astra/dscloudObtainingCredentials.html) the secure-connect zipped bundle for your Astra database.
+
+Unzip your copy of `secure-connect-your_astra_db.zip` which will contain the following files:
+
+```
+ca.crt
+cert
+cert.pfx
+config.json
+cqlshrc
+identity.jks
+key
+trustStore.jks
+```
+
+The `config.json` file contains the following:
+
+```
+host - the contact point for the CQL driver
+port - the CQL client port
+keyspace - the name of the keyspace you created
+trustStoreLocation - trustStore.jks is the truststore
+trustStorePassword - your truststore password
+keyStoreLocation - identity.jks is the keystore
+keyStorePassword - your keystore password
+```
+
+Using the information above, you will need to configure the following:
+
+```
+storage.hostname
+storage.port
+storage.username
+storage.password
+storage.cql.keyspace
+storage.cql.ssl.*
+```
+
 ## Deploying on Amazon Keyspaces (Experimental)
 
 > Amazon Keyspaces (for Apache Cassandra) is a scalable, highly available, and managed
@@ -196,8 +242,8 @@ iterate over all vertices or edges in large graphs effectively.
 > —  [Amazon Keyspaces](https://aws.amazon.com/keyspaces/)
 
 !!! note
-    The support for Amazon Keyspaces is experimental. We discourage usage in production
-    systems unless you have thoroughly tested it against your use case.
+The support for Amazon Keyspaces is experimental. We discourage usage in production
+systems unless you have thoroughly tested it against your use case.
 
 Follow these steps to set up a Amazon Keyspaces cluster and deploy JanusGraph over it.
 Prior to these instructions, make sure you have already followed
@@ -300,7 +346,7 @@ or java code, using the above configuration file.
 ### Known Problems
 
 -   Amazon Keyspaces creates tables on-demand. If you are connecting to it the first time, you
-would likely see error message like
+    would likely see error message like
     ```
     unconfigured table janusgraph.system_properties
     ```
@@ -320,7 +366,7 @@ would likely see error message like
 > —  [Amazon EC2](http://aws.amazon.com/ec2/)
 
 !!! note
-    The below documentation might be partially out-of-date.
+The below documentation might be partially out-of-date.
 
 Follow these steps to setup a Cassandra cluster on EC2 and deploy
 JanusGraph over Cassandra. To follow these instructions, you need an
@@ -440,8 +486,8 @@ gremlin> graph = JanusGraphFactory.open('janusgraph.properties')
 ```
 
 !!! note
-    You have successfully connected this JanusGraph instance to the
-    Cassandra cluster and can start to operate on the graph.
+You have successfully connected this JanusGraph instance to the
+Cassandra cluster and can start to operate on the graph.
 
 ### Connect to Cassandra cluster in EC2 from outside EC2
 
